@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>顾媛琪 | GU YUANQI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-logo {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 48px;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: #888888;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #0066ff;
+        }
+
+        /* 主视觉区域 */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            padding: 120px 24px;
+        }
+
+        /* 液体透镜容器 */
+        .liquid-name-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            user-select: none;
+        }
+
+        /* 中文姓名 - 液体透镜效果 */
+        .name-chinese {
+            font-size: clamp(80px, 20vw, 200px);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: 0.05em;
+            display: flex;
+            gap: 0.1em;
+            position: relative;
+        }
+
+        .name-char {
+            display: inline-block;
+            transition: transform 0.15s ease-out;
+            will-change: transform;
+            position: relative;
+        }
+
+        /* 液体透镜效果层 */
+        .name-char::before {
+            content: attr(data-char);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0066ff 0%, #3385ff 50%, #0066ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(0px);
+        }
+
+        .name-char.lens-active::before {
+            opacity: 1;
+        }
+
+        /* 英文姓名 */
+        .name-english {
+            font-size: clamp(14px, 3vw, 24px);
+            font-weight: 400;
+            letter-spacing: 0.8em;
+            color: #666666;
+            margin-top: 32px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .name-english:hover {
+            color: #0066ff;
+            letter-spacing: 1em;
+        }
+
+        /* 副标题 */
+        .subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: #444444;
+            margin-top: 48px;
+            text-transform: uppercase;
+        }
+
+        /* 装饰线条 */
+        .decoration-line {
+            position: absolute;
+            width: 1px;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, #0066ff, transparent);
+            opacity: 0.5;
+        }
+
+        .decoration-line.left {
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .decoration-line.right {
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 几何装饰 */
+        .geo-decoration {
+            position: absolute;
+            border: 1px solid #222222;
+        }
+
+        .geo-square {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            right: 15%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .geo-rect {
+            width: 120px;
+            height: 40px;
+            bottom: 25%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* 滚动提示 */
+        .scroll-hint {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .scroll-hint span {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: #666666;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, #0066ff, transparent);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 0.6; transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 16px 24px;
+            }
+
+            .nav-links {
+                gap: 24px;
+            }
+
+            .name-chinese {
+                font-size: clamp(60px, 18vw, 120px);
+            }
+
+            .name-english {
+                font-size: 12px;
+                letter-spacing: 0.5em;
+            }
+
+            .geo-decoration {
+                display: none;
+            }
+        }
+
+        /* 减少动画偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            .name-char {
+                transition: none;
+            }
+            
+            .geo-square,
+            .geo-rect {
+                animation: none;
+            }
+            
+            .scroll-hint {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-logo">GYQ</div>
+        <div class="nav-links">
+            <a href="index.html">首页</a>
+            <a href="index.html#works">作品</a>
+            <a href="index.html#about">关于</a>
+        </div>
+    </nav>
+
+    <!-- 主视觉 -->
+    <section class="hero">
+        <!-- 装饰线条 -->
+        <div class="decoration-line left"></div>
+        <div class="decoration-line right"></div>
+
+        <!-- 几何装饰 -->
+        <div class="geo-decoration geo-square"></div>
+        <div class="geo-decoration geo-rect"></div>
+
+        <!-- 液体透镜姓名 -->
+        <div class="liquid-name-container" id="liquidName">
+            <div class="name-chinese">
+                <span class="name-char" data-char="顾">顾</span>
+                <span class="name-char" data-char="媛">媛</span>
+                <span class="name-char" data-char="琪">琪</span>
+            </div>
+            <div class="name-english">GU YUANQI</div>
+            <div class="subtitle">广播电视编导 / 导演</div>
+        </div>
+
+        <!-- 滚动提示 -->
+        <div class="scroll-hint">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <script>
+        /**
+         * 液体透镜放大效果
+         * Liquid Lens Magnification Effect
+         */
+        class LiquidLens {
+            constructor(container) {
+                this.container = container;
+                this.chars = container.querySelectorAll('.name-char');
+                this.isActive = false;
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.rafId = null;
+                
+                this.init();
+            }
+
+            init() {
+                // 绑定鼠标事件
+                this.container.addEventListener('mouseenter', () => this.onMouseEnter());
+                this.container.addEventListener('mouseleave', () => this.onMouseLeave());
+                this.container.addEventListener('mousemove', (e) => this.onMouseMove(e));
+                
+                // 触摸设备支持
+                this.container.addEventListener('touchstart', () => this.onMouseEnter());
+                this.container.addEventListener('touchend', () => this.onMouseLeave());
+                this.container.addEventListener('touchmove', (e) => {
+                    const touch = e.touches[0];
+                    this.onMouseMove({
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                });
+            }
+
+            onMouseEnter() {
+                this.isActive = true;
+                this.startAnimation();
+            }
+
+            onMouseLeave() {
+                this.isActive = false;
+                this.resetChars();
+            }
+
+            onMouseMove(e) {
+                this.mouseX = e.clientX;
+                this.mouseY = e.clientY;
+            }
+
+            startAnimation() {
+                const animate = () => {
+                    if (!this.isActive) return;
+                    
+                    this.updateChars();
+                    this.rafId = requestAnimationFrame(animate);
+                };
+                
+                animate();
+            }
+
+            updateChars() {
+                this.chars.forEach((char, index) => {
+                    const rect = char.getBoundingClientRect();
+                    const charCenterX = rect.left + rect.width / 2;
+                    const charCenterY = rect.top + rect.height / 2;
+                    
+                    // 计算鼠标与字符中心的距离
+                    const deltaX = this.mouseX - charCenterX;
+                    const deltaY = this.mouseY - charCenterY;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    
+                    // 液体透镜参数
+                    const maxDistance = 300; // 影响范围
+                    const maxScale = 1.6; // 最大放大倍数
+                    const maxZ = 100; // 最大Z轴位移
+                    const maxRotateX = 15; // 最大X轴旋转
+                    const maxRotateY = 15; // 最大Y轴旋转
+                    
+                    if (distance < maxDistance) {
+                        // 计算影响强度 (0-1)
+                        const intensity = 1 - (distance / maxDistance);
+                        const easedIntensity = this.easeOutCubic(intensity);
+                        
+                        // 计算放大倍数 - 越近越大
+                        const scale = 1 + (maxScale - 1) * easedIntensity;
+                        
+                        // 计算Z轴位移 - 营造3D凸出感
+                        const translateZ = maxZ * easedIntensity;
+                        
+                        // 计算旋转 - 根据鼠标位置产生透视效果
+                        const rotateY = (deltaX / maxDistance) * maxRotateY * easedIntensity;
+                        const rotateX = -(deltaY / maxDistance) * maxRotateX * easedIntensity;
+                        
+                        // 计算位移 - 轻微跟随鼠标
+                        const translateX = deltaX * 0.05 * easedIntensity;
+                        const translateY = deltaY * 0.05 * easedIntensity;
+                        
+                        // 应用变换
+                        char.style.transform = `
+                            perspective(1000px)
+                            translate3d(${translateX}px, ${translateY}px, ${translateZ}px)
+                            rotateX(${rotateX}deg)
+                            rotateY(${rotateY}deg)
+                            scale(${scale})
+                        `;
+                        
+                        // 添加发光效果
+                        const glowIntensity = easedIntensity * 0.5;
+                        char.style.textShadow = `
+                            0 0 ${30 * glowIntensity}px rgba(0, 102, 255, ${0.8 * glowIntensity}),
+                            0 0 ${60 * glowIntensity}px rgba(0, 102, 255, ${0.4 * glowIntensity})
+                        `;
+                        
+                        // 激活渐变层
+                        char.classList.add('lens-active');
+                        
+                    } else {
+                        // 超出范围，恢复默认
+                        char.style.transform = 'perspective(1000px) translate3d(0, 0, 0) rotateX(0) rotateY(0) scale(1)';
+                        char.style.textShadow = 'none';
+                        char.classList.remove('lens-active');
+                    }
+                });
+            }
+
+            resetChars() {
+                this.chars.forEach(char => {
+                    char.style.transform = 'perspective(1000px) translate3d(0, 0, 0) rotateX(0) rotateY(0) scale(1)';
+                    char.style.textShadow = 'none';
+                    char.classList.remove('lens-active');
+                });
+                
+                if (this.rafId) {
+                    cancelAnimationFrame(this.rafId);
+                }
+            }
+
+            // 缓动函数 - 让效果更自然
+            easeOutCubic(x) {
+                return 1 - Math.pow(1 - x, 3);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const liquidName = document.getElementById('liquidName');
+            if (liquidName) {
+                new LiquidLens(liquidName);
+            }
+        });
+
+        // 添加鼠标轨迹效果
+        document.addEventListener('mousemove', (e) => {
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+            
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            
+            // 微妙的背景视差
+            hero.style.background = `
+                radial-gradient(
+                    ellipse at ${50 + x * 20}% ${50 + y * 20}%,
+                    #111111 0%,
+                    #0a0a0a 50%,
+                    #050505 100%
+                )
+            `;
+        });
+    </script>
+</body>
+</html>
